@@ -1,0 +1,129 @@
+<html>
+	<head>
+
+		<title>Matching Game</title>
+
+		<style type="text/css">
+
+		#right{
+
+			border-left:1px solid black;
+			left:500px;
+
+			}
+		div{
+
+			position: absolute;
+			width: 500px;
+			height:500px;
+
+			}
+
+		img{
+			position: absolute;
+		}
+
+		</style>
+
+
+	</head>
+
+	<body id="theBody" onload="show_face()">
+		<h2>Matching Game</h2>
+		<p>Click on the extra smiling face on the left.</p>
+
+		<div id="left"></div>
+		<div id="right"></div>
+
+
+		<script>
+			var left_div = document.getElementById("left");
+			var extra_img = document.createElement('img');
+			var the_body = document.getElementById("theBody");
+			var numberOfFaces = 3;
+			var numberOfMistak = 0;
+
+			function show_face() {
+
+				var i = 0;
+
+				while (i < numberOfFaces) {
+
+					var random_top = generate_random();
+					var random_left = generate_random();
+
+					var the_img = document.createElement('img');
+					the_img.src = 'http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png';
+					the_img.style.top = random_top + "px";
+					the_img.style.left = random_left + "px";
+					left_div.appendChild(the_img);
+
+					i++;
+				}
+				//Copy the left side in the right side
+				var copy_left = left_div.cloneNode(true);
+				document.getElementById("right").appendChild(copy_left);
+
+				//Adding the extra image
+				var x = generate_random();
+				var y = generate_random();
+				extra_img.src = 'http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png';
+				extra_img.id = 'extra'
+				extra_img.style.top = x + "px";
+				extra_img.style.left = y + "px";
+				left_div.appendChild(extra_img);
+
+				check();
+
+			}
+
+		function check(){
+			if(left_div.hasChildNodes()){
+					left_div.lastChild.onmousedown = function nextLeve(event) {
+
+						event.stopPropagation();
+						delete_nodes("left");
+						delete_nodes("right");
+						numberOfFaces += 2;
+						show_face();
+
+
+				};}
+			if(the_body.hasChildNodes()){
+				the_body.onclick = function gameOver() {
+					numberOfMistak += 1
+					if (numberOfMistak == 4){
+						alert("Game Over!");
+						the_body.onclick = null; // means that from now onwards nothing will happen when the user clicks anywhere in the web page
+						left_div.lastChild.onmousedown = null; // means that from now onwards nothing will happen when the user clicks on the extra face.
+					}
+
+
+				};
+			}
+
+		}
+
+
+		function delete_nodes(theNode) {
+
+			var item = document.getElementById(theNode);
+			while (item.firstChild) {
+				item.removeChild(item.firstChild);
+			}
+
+		}
+
+		function generate_random() {
+			var random_no = Math.random() * 400;
+			random_no = Math.floor(random_no);
+
+			return random_no;
+		}
+
+
+		</script>
+
+	</body>
+
+</html>
